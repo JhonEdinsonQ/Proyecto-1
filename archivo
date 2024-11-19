@@ -1,0 +1,22 @@
+# Definir la ruta de la carpeta principal
+$carpetaPrincipal = "C:\Users\ESTUDIANTE\Documents\Prueba"
+
+# Lista de estudiantes
+$estudiantes = @(
+    @{Nombre="Estudiante1"; Correo="estudiante1@ejemplo.com"},
+    @{Nombre="Estudiante2"; Correo="estudiante2@ejemplo.com"}
+    # Agrega más estudiantes aquí
+)
+
+# Crear carpetas y asignar permisos
+foreach ($estudiante in $estudiantes) {
+    # Crear la carpeta del estudiante
+    $carpetaEstudiante = New-Item -Path "$carpetaPrincipal\$($estudiante.Nombre)" -ItemType Directory
+    
+    # Asignar permisos (ejemplo de acceso completo para el estudiante)
+    $usuario = $estudiante.Correo
+    $acl = Get-Acl $carpetaEstudiante.FullName
+    $regla = New-Object System.Security.AccessControl.FileSystemAccessRule($usuario, "FullControl", "Allow")
+    $acl.AddAccessRule($regla)
+    Set-Acl -Path $carpetaEstudiante.FullName -AclObject $acl
+}
